@@ -312,26 +312,6 @@ footer{margin-top:72px;border-top:1px solid var(--line);background:var(--paper-2
 .gm-acts .btn{flex:1;min-width:150px}
 .gm-safe{margin-top:14px;font-size:14px;color:var(--ink-3);line-height:1.7}
 
-/* 跳转确认 */
-#goModal .modal-card{max-width:470px;padding:28px 26px 24px;text-align:center}
-.go-ic{width:56px;height:56px;border-radius:50%;background:var(--brand-s);color:var(--brand);
-  display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:26px}
-#goModal h3{font-size:21px;font-weight:700;font-family:var(--serif);letter-spacing:.5px}
-#goModal .sub{font-size:15px;color:var(--ink-2);margin-top:8px}
-.go-game{display:flex;gap:12px;align-items:center;margin:18px 0 14px;padding:12px 14px;
-  border:1px solid var(--line);border-radius:var(--radius-sm);background:var(--paper);text-align:left}
-.go-game img{width:58px;height:58px;border-radius:9px;object-fit:cover;flex-shrink:0}
-.go-game .n{font-size:16.5px;font-weight:700;line-height:1.4}
-.go-game .h{font-family:var(--mono);font-size:13.5px;color:var(--ink-3);word-break:break-all;margin-top:3px}
-.go-points{text-align:left;display:grid;gap:8px;margin:0 0 16px}
-.go-points li{position:relative;padding-left:24px;font-size:14.5px;color:var(--ink-2);line-height:1.6}
-.go-points li::before{content:'✓';position:absolute;left:0;top:0;color:var(--ok);font-weight:700}
-.go-remember{display:flex;align-items:center;gap:9px;justify-content:center;font-size:14.5px;
-  color:var(--ink-2);margin-bottom:16px;cursor:pointer;min-height:44px}
-.go-remember input{width:19px;height:19px;accent-color:var(--brand);cursor:pointer}
-.go-acts{display:flex;gap:12px}
-.go-acts .btn{flex:1}
-
 /* 轻提示 */
 .toast{position:fixed;left:50%;bottom:34px;transform:translate(-50%,16px);z-index:200;opacity:0;
   pointer-events:none;background:var(--ink);color:#fff;font-size:15.5px;padding:13px 22px;
@@ -393,7 +373,6 @@ footer{margin-top:72px;border-top:1px solid var(--line);background:var(--paper-2
   .modal-card{max-height:92vh;border-radius:var(--radius-lg) var(--radius-lg) 0 0;
     animation:sheet .24s cubic-bezier(.2,.8,.25,1)}
   @keyframes sheet{from{transform:translateY(30px);opacity:.6}to{transform:none;opacity:1}}
-  #goModal .modal-card{padding:24px 20px 22px}
   .gm-facts{grid-template-columns:1fr}
 }
 
@@ -457,7 +436,6 @@ footer{margin-top:72px;border-top:1px solid var(--line);background:var(--paper-2
   .gift .code-row{padding:11px 12px;gap:10px}
   .gift .code-row .code{font-size:17px;letter-spacing:.5px}
   .gift .gfoot{font-size:13px}
-  .go-acts{flex-direction:column}
   .foot{padding:26px 16px 30px}
   .foot p{font-size:13.5px}
 }

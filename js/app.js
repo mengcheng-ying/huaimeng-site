@@ -37,9 +37,6 @@
     if (i < 0) return s;
     return s.slice(0, i) + '<mark>' + s.slice(i, i + q.length) + '</mark>' + s.slice(i + q.length);
   }
-  function hostOf(url) {
-    try { return new URL(url, location.href).hostname; } catch (e) { return url; }
-  }
   function dateCN(iso, withYear) { // '2026-09-14' → '9月14日'
     var m = /^(\d{4})-(\d{2})-(\d{2})/.exec(String(iso || ''));
     if (!m) return iso || '';
@@ -146,23 +143,6 @@
       }).join('');
       document.body.appendChild(nav);
     }
-    var gm = document.getElementById('goModal');
-    if (gm && !document.getElementById('goLink')) {
-      gm.innerHTML =
-        '<div class="modal-card">' +
-          '<button class="x" type="button" data-close aria-label="关闭">×</button>' +
-          '<div class="go-ic" aria-hidden="true">↗</div>' +
-          '<h3 id="goTitle">即将前往官方下载</h3>' +
-          '<p class="sub">确认目标网站无误，再继续。</p>' +
-          '<div class="go-game"><img id="goCover" src="" alt=""><div>' +
-            '<div class="n" id="goName"></div><div class="h" id="goHost"></div></div></div>' +
-          '<ul class="go-points"><li>该入口来自游戏发行渠道，不是广告中转页</li>' +
-            '<li>怀梦全程免费、不代充，收费的都和我们无关</li></ul>' +
-          '<label class="go-remember"><input type="checkbox" id="goRemember"> 以后直接跳转，不再提示</label>' +
-          '<div class="go-acts"><button class="btn btn-ghost" type="button" data-close>再想想</button>' +
-            '<a class="btn btn-brand" id="goLink" href="#" target="_blank" rel="noopener noreferrer">继续前往下载</a></div>' +
-        '</div>';
-    }
   }
   ensureShell();
 
@@ -209,12 +189,9 @@
 
   /* ---------------- 游戏详情 ---------------- */
   var gameModal = $('#gameModal');
-  var currentGameName = '', currentGameCover = '';
   function openGame(id) {
     var g = gameById(id);
     if (!g) return;
-    currentGameName = g.name;
-    currentGameCover = g.cover || '';
     $('#gmCover').src = g.cover || '';
     $('#gmCover').alt = g.name + ' 游戏封面';
     $('#gmTitle').textContent = g.name;
@@ -246,49 +223,15 @@
   $('#gmActs').addEventListener('click', function (e) {
     var b = e.target.closest('[data-go]');
     if (!b) return;
-    var url = b.getAttribute('data-go');
     closeModal(gameModal);
-    askDownload(currentGameName, url, currentGameCover);
+    goDownload(b.getAttribute('data-go'));
   });
 
-  /* ---------------- 下载跳转确认 ---------------- */
-  var goModal = $('#goModal'), goLink = $('#goLink'), goRemember = $('#goRemember');
-  var SKIP_KEY = 'hm.skipGoTip';
-  function skipTip() {
-    try { return localStorage.getItem(SKIP_KEY) === '1'; } catch (e) { return false; }
-  }
-  function setSkipTip(v) {
-    try { v ? localStorage.setItem(SKIP_KEY, '1') : localStorage.removeItem(SKIP_KEY); } catch (e) {}
-    renderResetTip();
-  }
-  function askDownload(gameName, url, cover) {
+  /* ---------------- 下载跳转 ---------------- */
+  /* 点下载直接前往官方入口，不做二次确认，避免挡住玩家 */
+  function goDownload(url) {
     if (!url || url === '#') { toast('该游戏暂未提供下载入口'); return; }
-    if (skipTip()) { window.open(url, '_blank', 'noopener'); return; }
-    $('#goName').textContent = gameName || '游戏';
-    $('#goHost').textContent = '将要前往：' + hostOf(url);
-    var img = $('#goCover');
-    img.src = cover || '';
-    img.alt = (gameName || '') + ' 游戏封面';
-    img.style.display = cover ? '' : 'none';
-    goLink.href = url;
-    goRemember.checked = false;
-    openModal(goModal);
-  }
-  goLink.addEventListener('click', function () {
-    if (goRemember.checked) setSkipTip(true);
-    closeModal(goModal);
-  });
-  /* 用户曾勾选"不再提示"时，页脚给出恢复入口，避免设置无法撤销 */
-  function renderResetTip() {
-    var old = $('#resetGoTip');
-    if (!skipTip()) { if (old) old.parentNode.removeChild(old); return; }
-    if (old) return;
-    var p = document.createElement('p');
-    p.innerHTML = '<a href="#" id="resetGoTip">恢复「下载前提示」</a>';
-    $('.foot').appendChild(p);
-    p.firstChild.addEventListener('click', function (e) {
-      e.preventDefault(); setSkipTip(false); toast('已恢复下载前提示');
-    });
+    window.open(url, '_blank', 'noopener');
   }
 
   /* ---------------- 游戏库 ---------------- */
@@ -365,9 +308,7 @@
     var b = e.target.closest('[data-dl]');
     if (b) {
       var g = gameById(+b.getAttribute('data-dl'));
-      if (!g) return;
-      currentGameName = g.name;
-      askDownload(g.name, bestUrl(g), g.cover);
+      if (g) goDownload(bestUrl(g));
       return;
     }
     /* 整行可点：点在这一行的空白处也打开游戏介绍（横向列表的常见做法，触控更宽容）；
@@ -419,7 +360,7 @@
     var link = e.target.closest('[data-nlink]');
     if (link) {
       var g1 = gameById(+link.getAttribute('data-nlink'));
-      if (g1) askDownload(g1.name, bestUrl(g1), g1.cover);
+      if (g1) goDownload(bestUrl(g1));
       return;
     }
     var intro = e.target.closest('[data-ngame]');
@@ -689,5 +630,4 @@
   bindSearch('#topSearch', '#topSearchInput', '#topSearchPanel');
   bindSearch('#heroSearch', '#heroSearchInput', '#heroSearchPanel');
   bindSpy();
-  renderResetTip();
 })();
