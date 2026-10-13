@@ -15,6 +15,16 @@
  */
 var NOTICES_DATA = [
   {
+    id: 'wlwz-2026-10-13-g10',
+    game: '武林外传：十年之约',
+    gameId: 21,
+    type: '开区',
+    title: 'G10.一醉江湖-预创角已开启',
+    content: '正式开服时间：10月13日 10:00 武林外传绿色版【G10.一醉江湖】预约即将开启~ 预约入口：https://wlwz.3975.com/lsbyue/index?type=yx 预约方式：手机号登录预约抢码 抢码时间：10月9日 10:00 备注：本次预约码仅能在【G10.一醉江湖】进行创角',
+    date: '2026-10-13',
+    urgent: true
+  },
+  {
     id: 'rongyao-2026-09-11-maintain',
     game: '荣耀出征卡点服',
     gameId: 6,
